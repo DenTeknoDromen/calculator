@@ -1,8 +1,12 @@
+import math
 # GUI med input
 
 # Negativa tal och exponenter funkar inte, lös med gui
+# Math decimal/length check
+# parantes implementation
+# negativa tal implementation (parantes)
 
-operators = ["+", "-", "/", "*",
+operators = ["+", "-", "/", "÷", "×",
              "**", "%", "(", ")"]
 
 
@@ -21,17 +25,17 @@ def get_operand(a, b, operand):
         a += b
     elif operand == "-":
         a -= b
-    elif operand == "*":
+    elif operand == "×":
         a *= b
-    elif operand == "/":
+    elif operand == "÷":
         a /= b
-    elif operand == "**":
+    elif operand == "∧":
         a **= b
     elif operand == "%":
         a %= b
 
+    # Math decimalcheck här 
     return a
-
 
 def parse_input(input):
     index = 0
@@ -67,5 +71,5 @@ def main(input):
     return output
 
 
-while True:
-    print(main(input("> ")))
+# while True:
+#     print(main(input("> ")))
