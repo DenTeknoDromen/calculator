@@ -15,25 +15,36 @@ display = ttk.Frame(frame, borderwidth=5, relief="flat", width=200, height=100)
 cnvs = Canvas(frame, width=370, height=150, background="White")
 id = cnvs.create_text(370, 150, text="0", anchor="se", justify=LEFT, font="TkHeadingFont 41")
 
+# Updates the screen on the calculator
 def set_display():
     num = i.main_str
+    
+    # Resets font size
     i.reset_font()
+    # Lowers fontsize for longer input
     for x in range(len(num)):
         if x % 4 == 0:
             i.font_size -= 4
+    # Displays zero if input is empty
     if len(num) == 0:
         num = "0"
         i.reset()
+    # Updates tkinter object
     cnvs.itemconfigure(id, text=num, font=f"TkHeadingFont {i.font_size}")
 
+# Gets input from buttons
+# Gets called on each buttonpress
 i = input()
-def testone(indata):
+def get_input(indata):
+    # Checks if number of symbols is lower than max
     if len(i.main_str) < 24:
         i.main_str += indata
-        set_display()
-    print(i.main_str)
+        set_display()   #Updates screen for every buttonpress
+    print(i.main_str)   # For testing purposes
     
+# Used for special functions suchas clear and equals
 def functions(indata):
+    # Calls the main function with the input as string to be calculated
     if indata == "=":
         i.main_str = str(main(i.main_str))
         set_display()
@@ -46,72 +57,74 @@ def functions(indata):
         set_display()
 
 
+# Initializes buttons for numbers and symbols
+padding = 10    # Changes padding for all buttons
+btn_zero = ttk.Button(buttons, padding=padding, text="0", command=lambda a="0": get_input(a))
+btn_one = ttk.Button(buttons, padding=padding, text="1", command=lambda a="1": get_input(a))
+btn_two = ttk.Button(buttons, padding=padding, text="2", command=lambda a="2": get_input(a))
+btn_three = ttk.Button(buttons, padding=padding, text="3", command=lambda a="3": get_input(a))
+btn_four = ttk.Button(buttons, padding=padding, text="4", command=lambda a="4": get_input(a))
+btn_five = ttk.Button(buttons, padding=padding, text="5", command=lambda a="5": get_input(a))
+btn_six = ttk.Button(buttons, padding=padding, text="6", command=lambda a="6": get_input(a))
+btn_seven = ttk.Button(buttons, padding=padding, text="7", command=lambda a="7": get_input(a))
+btn_eight = ttk.Button(buttons, padding=padding, text="8", command=lambda a="8": get_input(a))
+btn_nine = ttk.Button(buttons, padding=padding, text="9", command=lambda a="9": get_input(a))
 
-x = 10
-b0 = ttk.Button(buttons, padding=x, text="0", command=lambda a="0": testone(a))
-b1 = ttk.Button(buttons, padding=x, text="1", command=lambda a="1": testone(a))
-b2 = ttk.Button(buttons, padding=x, text="2", command=lambda a="2": testone(a))
-b3 = ttk.Button(buttons, padding=x, text="3", command=lambda a="3": testone(a))
-b4 = ttk.Button(buttons, padding=x, text="4", command=lambda a="4": testone(a))
-b5 = ttk.Button(buttons, padding=x, text="5", command=lambda a="5": testone(a))
-b6 = ttk.Button(buttons, padding=x, text="6", command=lambda a="6": testone(a))
-b7 = ttk.Button(buttons, padding=x, text="7", command=lambda a="7": testone(a))
-b8 = ttk.Button(buttons, padding=x, text="8", command=lambda a="8": testone(a))
-b9 = ttk.Button(buttons, padding=x, text="9", command=lambda a="9": testone(a))
+btn_plus = ttk.Button(buttons, padding=padding, text="+", command=lambda a="+": get_input(a))
+btn_equals = ttk.Button(buttons, padding=padding, text="=", command=lambda a="=": functions(a))
+btn_minus = ttk.Button(buttons, padding=padding, text="-", command=lambda a="-": get_input(a))
+btn_multi = ttk.Button(buttons, padding=padding, text="×", command=lambda a="×": get_input(a))
+btn_div = ttk.Button(buttons, padding=padding, text="÷", command=lambda a="÷": get_input(a))
+btn_expo = ttk.Button(buttons, padding=padding, text="^", command=lambda a="^": get_input(a))
 
-bplus = ttk.Button(buttons, padding=x, text="+", command=lambda a="+": testone(a))
-bequals = ttk.Button(buttons, padding=x, text="=", command=lambda a="=": functions(a))
-bminus = ttk.Button(buttons, padding=x, text="-", command=lambda a="-": testone(a))
-bmulti = ttk.Button(buttons, padding=x, text="×", command=lambda a="×": testone(a))
-bdiv = ttk.Button(buttons, padding=x, text="÷", command=lambda a="÷": testone(a))
-bexpo = ttk.Button(buttons, padding=x, text="∧", command=lambda a="∧": testone(a))
+btn_comma = ttk.Button(buttons, padding=padding, text=".", command=lambda a=".": get_input(a))
+btn_paranopen = ttk.Button(buttons, padding=padding, text="(", command=lambda a="(": get_input(a))
+btn_paranclose = ttk.Button(buttons, padding=padding, text=")", command=lambda a=")": get_input(a))
+btn_pi = ttk.Button(buttons, padding=padding, text="π", command=lambda a="π": get_input(a))
 
-bcomma = ttk.Button(buttons, padding=x, text=".", command=lambda a=".": testone(a))
-bopen = ttk.Button(buttons, padding=x, text="(", command=lambda a="(": testone(a))
-bclose = ttk.Button(buttons, padding=x, text=")", command=lambda a=")": testone(a))
-bpi = ttk.Button(buttons, padding=x, text="π", command=lambda a="π": testone(a))
+btn_back = ttk.Button(buttons, padding=padding, text="🡨", command=lambda a="🡨": functions(a))
+btn_clear = ttk.Button(buttons, padding=padding, text="CE", command=lambda a="CE": functions(a))
 
-bback = ttk.Button(buttons, padding=x, text="🡨", command=lambda a="🡨": functions(a))
-bclear = ttk.Button(buttons, padding=x, text="CE", command=lambda a="CE": functions(a))
-
-
+# Creates grid for UI
 frame.grid()
 display.grid(row=0)
 buttons.grid(column=0, row=1)
 cnvs.grid(row=0)
 
-row = 5
-b0.grid(column=1, row=row)
-bequals.grid(column=3, row=row)
-bcomma.grid(column=2, row=row)
+# Places buttons on grid
+row = 5     # Shorthands for changing row number below
+btn_zero.grid(column=1, row=row)
+btn_equals.grid(column=3, row=row)
+btn_comma.grid(column=2, row=row)
 
 row = 4
-b1.grid(column=0, row=row)
-b2.grid(column=1, row=row)
-b3.grid(column=2, row=row)
-bplus.grid(column=3, row=row)
+btn_one.grid(column=0, row=row)
+btn_two.grid(column=1, row=row)
+btn_three.grid(column=2, row=row)
+btn_plus.grid(column=3, row=row)
 
 row = 3
-b4.grid(column=0, row=row)
-b5.grid(column=1, row=row)
-b6.grid(column=2, row=row)
-bminus.grid(column=3, row=row)
+btn_four.grid(column=0, row=row)
+btn_five.grid(column=1, row=row)
+btn_six.grid(column=2, row=row)
+btn_minus.grid(column=3, row=row)
 
 row = 2
-b7.grid(column=0, row=row)
-b8.grid(column=1, row=row)
-b9.grid(column=2, row=row)
-bmulti.grid(column=3, row=row)
+btn_seven.grid(column=0, row=row)
+btn_eight.grid(column=1, row=row)
+btn_nine.grid(column=2, row=row)
+btn_multi.grid(column=3, row=row)
 
 row = 1
-bdiv.grid(column=3,row=row)
-bopen.grid(column=1, row=row)
-bclose.grid(column=2, row=row)
+btn_div.grid(column=3,row=row)
+btn_paranopen.grid(column=1, row=row)
+btn_paranclose.grid(column=2, row=row)
+btn_pi.grid(column=0, row=row)
 
 row=0
-bclear.grid(column=2, row=row)
-bback.grid(column=3, row=row)
-bexpo.grid(column=0, row=row)
+btn_clear.grid(column=2, row=row)
+btn_back.grid(column=3, row=row)
+btn_expo.grid(column=0, row=row)
 
 
 root.mainloop()

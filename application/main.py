@@ -6,7 +6,7 @@ import math
 # parantes implementation
 # negativa tal implementation (parantes)
 
-operators = ["+", "-", "/", "÷", "×",
+operators = ["+", "-", "/", "÷", "×", "^", 
              "**", "%", "(", ")"]
 
 
@@ -29,7 +29,7 @@ def get_operand(a, b, operand):
         a *= b
     elif operand == "÷":
         a /= b
-    elif operand == "∧":
+    elif operand == "^":
         a **= b
     elif operand == "%":
         a %= b
@@ -62,9 +62,15 @@ def parse_output(indata):
         output = str(indata)
     return output
 
+def edgecase(indata):
+    if "π" in indata:
+        i = indata.index("π")
+        indata[i] = math.pi  
+    return indata
 
 def main(input):
     lst_input = parse_input(input)  # placeholder
+    lst_input = edgecase(lst_input)
     lst_input = make_float(lst_input)
     output = get_operand(lst_input[0], lst_input[2], lst_input[1])
     output = parse_output(output)

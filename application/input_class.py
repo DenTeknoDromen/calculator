@@ -1,3 +1,4 @@
+# Class for storing and showing input from/to GUI
 class input:
     def __init__(self) -> None:
         self.main_str = ""
