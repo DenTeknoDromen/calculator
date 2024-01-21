@@ -6,7 +6,6 @@ from main import operators, main
 root = Tk()
 root.title("Calculator")
 root.resizable(False, False)
-#root.geometry("380x500")
 
 frame = ttk.Frame(root)
 buttons = ttk.Frame(frame)
@@ -40,7 +39,6 @@ def get_input(indata):
     if len(i.main_str) < 24:
         i.main_str += indata
         set_display()   #Updates screen for every buttonpress
-    print(i.main_str)   # For testing purposes
     
 # Used for special functions suchas clear and equals
 def functions(indata):

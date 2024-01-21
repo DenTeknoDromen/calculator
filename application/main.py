@@ -2,16 +2,11 @@ import math
 import re
 import decimal
 
-# Negativa tal och exponenter funkar inte, lös med gui
-# Math decimal/length check
-# parantes implementation
-# negativa tal implementation (parantes)
-
+# Sorted in pemdas order
 operators = ["^", "×", "÷", "+", "-"]
 
 # Converts string input to list with numbers and operators as string
 def parse_input(str_input):
-    #re.findall("")
     lst_input = re.split("([^0-9π.])", str_input)
     while "" in lst_input:
          lst_input.remove("")
@@ -25,9 +20,9 @@ def check_edgecases(indata):
         indata[i] = decimal.Decimal(math.pi)
     return indata
 
-# Converts string integers to float numbers
+# Converts string numbers to decimal type
 # Returns list with operators as string and numbers as float
-def make_float(input):
+def change_type(input):
     for x in range(len(input)):
         try:
             input[x] = decimal.Decimal((input[x]))
@@ -53,19 +48,24 @@ def get_operand(a, b, operand):
     
     return a
 
-
+# Goes through current list and perfoms the current operator
 def make_calc(lst_input, symbol):
+    # Removes any empty instances of list
     if lst_input[0] in operators:
         lst_input.insert(0, 0)
 
     if lst_input[-1] in operators:
          lst_input.append(0)
 
+    # Iterates through input list and calls get_operand when
+    # current operator is used
     i = 1
     while i < len(lst_input):
         if (lst_input[i] == symbol):
-            output = get_operand(lst_input[i-1], lst_input[i+1], lst_input[i])
-            lst_input[i] = output
+            # Sends 'a' 'operator' 'b' to get_operand
+            result = get_operand(lst_input[i-1], lst_input[i+1], lst_input[i])
+            # Saves result in 'a' position and deletes the rest
+            lst_input[i] = result
             lst_input.pop(i+1)
             lst_input.pop(i-1)
         else:
@@ -73,20 +73,35 @@ def make_calc(lst_input, symbol):
 
     return lst_input
 
-# !!
+# Sorts through input list according to pemdas
 def make_pemdas(lst_input):
+    # Calls make_pemdas recursively if a paranthesis is present in input list
     while "(" in lst_input:
         open = lst_input.index("(")
-        closed = lst_input.index(")")
+        closed = get_close(lst_input, open)
         lst_input[open] = make_pemdas(lst_input[open + 1:closed])
         del lst_input[open + 1:closed + 1]
 
-
+    # Iterates though operators in pemdas order
+    # Calls make_calc with current symbol
     for a in operators:
         if len(lst_input) == 1:
             break
         make_calc(lst_input, a)
     return lst_input[0]
+
+# Returns the index for closing parenthesis for the opening parenthesis in input_list
+def get_close(lst_input, open_index):
+    paran = (lst_input[open_index])
+
+    for i in range(1, len(lst_input)):
+        if lst_input[i] == "(" or lst_input[i] == ")":
+            paran += lst_input[i]
+        if "()" in paran:
+            paran = paran.replace("()","")
+        if paran == "":
+            return i
+    return len(lst_input) - 1
 
 # Converts list to string for output
 def parse_output(indata):
@@ -103,10 +118,9 @@ def parse_output(indata):
 
 def main(input):
     lst_input = parse_input(input)
-    print(lst_input)
     try:
         lst_input = check_edgecases(lst_input)
-        lst_input = make_float(lst_input)
+        lst_input = change_type(lst_input)
         output = make_pemdas(lst_input)
         output = parse_output(output)
     except Exception as e:
@@ -114,4 +128,4 @@ def main(input):
     return output
 
 if __name__ == "__main__":
-    print(main("((1+2)+(1+2))*4"))
+    print(main("((1+2)+(1+2))×4"))
