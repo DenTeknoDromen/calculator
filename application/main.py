@@ -50,7 +50,7 @@ def get_operand(a, b, operand):
 
 # Goes through current list and perfoms the current operator
 def make_calc(lst_input, symbol):
-    # Removes any empty instances of list
+    # Handles negative numbers in parenthesis and some faulty inputs
     if lst_input[0] in operators:
         lst_input.insert(0, 0)
 
