@@ -1,30 +1,28 @@
 import math
 import re
+import decimal
 
 # Negativa tal och exponenter funkar inte, lös med gui
 # Math decimal/length check
 # parantes implementation
 # negativa tal implementation (parantes)
 
-operators = ["+", "-", "/", "÷", "×", "^", 
-             "**", "%", "(", ")"]
+operators = ["^", "×", "÷", "+", "-"]
 
 # Converts string input to list with numbers and operators as string
 def parse_input(str_input):
+    #re.findall("")
     lst_input = re.split("([^0-9π.])", str_input)
-    if lst_input[0] == "":
-        lst_input[0] = "0"
-
-    if lst_input[-1] == "":
-         lst_input[-1] = "0"
+    while "" in lst_input:
+         lst_input.remove("")
 
     return lst_input
 
 # Checks for edgecases that needs to be handled before making calculations
 def check_edgecases(indata):
-    if "π" in indata:
+    while "π" in indata:
         i = indata.index("π")
-        indata[i] = math.pi  
+        indata[i] = decimal.Decimal(math.pi)
     return indata
 
 # Converts string integers to float numbers
@@ -32,7 +30,7 @@ def check_edgecases(indata):
 def make_float(input):
     for x in range(len(input)):
         try:
-            input[x] = float(input[x])
+            input[x] = decimal.Decimal((input[x]))
         except Exception as e:
             if input[x] in operators:
                 input[x] = str(input[x])
@@ -52,16 +50,43 @@ def get_operand(a, b, operand):
         a **= b
     elif operand == "%":
         a %= b
-
-    # Math decimalcheck här 
+    
     return a
 
 
-def make_calc(lst_input):
-    output = lst_input[0]
-    for i in range(2, len(lst_input), 2):
-        output = get_operand(output, lst_input[i], lst_input[i-1])
-    return output
+def make_calc(lst_input, symbol):
+    if lst_input[0] in operators:
+        lst_input.insert(0, 0)
+
+    if lst_input[-1] in operators:
+         lst_input.append(0)
+
+    i = 1
+    while i < len(lst_input):
+        if (lst_input[i] == symbol):
+            output = get_operand(lst_input[i-1], lst_input[i+1], lst_input[i])
+            lst_input[i] = output
+            lst_input.pop(i+1)
+            lst_input.pop(i-1)
+        else:
+            i += 1
+
+    return lst_input
+
+# !!
+def make_pemdas(lst_input):
+    while "(" in lst_input:
+        open = lst_input.index("(")
+        closed = lst_input.index(")")
+        lst_input[open] = make_pemdas(lst_input[open + 1:closed])
+        del lst_input[open + 1:closed + 1]
+
+
+    for a in operators:
+        if len(lst_input) == 1:
+            break
+        make_calc(lst_input, a)
+    return lst_input[0]
 
 # Converts list to string for output
 def parse_output(indata):
@@ -73,16 +98,20 @@ def parse_output(indata):
     except Exception as e:
         print("Det här är fel")
         output = str(indata)
+    
     return output
 
 def main(input):
     lst_input = parse_input(input)
     print(lst_input)
-    lst_input = check_edgecases(lst_input)
-    lst_input = make_float(lst_input)
-    output = make_calc(lst_input)
-    output = parse_output(output)
+    try:
+        lst_input = check_edgecases(lst_input)
+        lst_input = make_float(lst_input)
+        output = make_pemdas(lst_input)
+        output = parse_output(output)
+    except Exception as e:
+        return "ERROR"
     return output
 
 if __name__ == "__main__":
-    print(main("5÷5+5"))
+    print(main("((1+2)+(1+2))*4"))
